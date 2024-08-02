@@ -53,6 +53,10 @@ return amt.toLocaleString(undefined,{
 })
 }
 
+export const formatDateToLocaleString=(epoch)=>{
+    return new Date(epoch).toLocaleDateString();
+}
+
 //total spent by budget
 export const calculateSpentByBudget=(budgetId)=>{
     const expenses=fetchData("expenses") ?? [];
