@@ -1,5 +1,5 @@
 import React from 'react'
-import {createBudget, createExpense, fetchData } from '../helpers'
+import {createBudget, createExpense, deleteItem, fetchData } from '../helpers'
 import { Link, useLoaderData } from 'react-router-dom';
 import Intro from '../components/Intro';
 import {toast} from 'react-toastify'
@@ -56,6 +56,22 @@ export async function dashboardAction({request}){
         }
         catch(e){
             throw new Error("There was a problem creating your Expense")
+
+        }
+    }
+    if(_action==="deleteExpense"){
+        try{
+            //create expense
+            deleteItem({
+                key:"expenses",
+                id:values.expenseId,
+
+            })
+            return toast.success(`Expense Delete!`)
+
+        }
+        catch(e){
+            throw new Error("There was a problem deleting your Expense")
 
         }
     }
