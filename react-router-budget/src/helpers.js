@@ -3,6 +3,7 @@ export const fetchData=(key)=>{
     return JSON.parse(localStorage.getItem(key));
 };
 
+
 //getallitmes from local storage
 export const getAllMatchingItems=({category,key,value})=>{
     const data=fetchData(category) ?? [];
@@ -82,3 +83,4 @@ export const calculateSpentByBudget=(budgetId)=>{
     },0)
     return budgetSpent;
 }
+

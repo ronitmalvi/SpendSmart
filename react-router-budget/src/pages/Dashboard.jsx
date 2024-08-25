@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {createBudget, createExpense, deleteItem, fetchData } from '../helpers'
 import { Link, useLoaderData } from 'react-router-dom';
 import Intro from '../components/Intro';
@@ -7,14 +7,54 @@ import AddBudgetForm from '../components/AddBudgetForm';
 import AddExpenseForm from '../components/AddExpenseForm';
 import BudgetItem from '../components/BudgetItem';
 import Table from '../components/Table';
+import supabase from '../config/supabaseClient';
 
 //loader function
-export function dashboardLoader(){
-    const userName=fetchData("userName");
-    const budgets=fetchData("budgets");
-    const expenses=fetchData("expenses");
-    return {userName,budgets,expenses}
-}
+// export function dashboardLoader(){
+//     const userName=fetchData("userName");
+//     const [fetchError,setFetchError]=useState(null);
+//     const [budgets,setbudget]=useState(null);
+//     const [expenses,setexpense]=useState(null);
+
+//     useEffect(()=>{
+//         const fetchBudgets=async()=>{
+//             const {data,error} = await supabase
+//             .from('Budgets-table')
+//             .select()
+
+//             if(error){
+//                 setFetchError('Could not fetch the budget')
+//                 setbudget(null)
+//                 console.log(error)
+//             }
+//             if(data){
+//                 setbudget(data)
+//                 setFetchError(null)
+//             }
+//         }
+
+//         const fetchExpenses=async()=>{
+//             const {data,error} = await supabase
+//             .from('Expense-table')
+//             .select()
+
+//             if(error){
+//                 setFetchError('Could not fetch the expense')
+//                 setexpense(null)
+//                 console.log(error)
+//             }
+//             if(data){
+//                 setexpense(data)
+//                 setFetchError(null)
+//             }
+//         }
+
+//         fetchBudgets();
+//         fetchExpenses();
+
+//     },[])
+//     return {userName,budgets,expenses,fetchError}
+// }
 
 //action function called by APP
 export async function dashboardAction({request}){
@@ -34,8 +74,13 @@ export async function dashboardAction({request}){
     if(_action==="createBudget"){
         try{
             //create budget
-            createBudget({name:values.newBudget,amount:values.newBudgetAmount})
-            return toast.success(`Budget Created!`)
+            // createBudget({
+            //     name:values.newBudget,
+            //     amount:values.newBudgetAmount})
+            // return toast.success(`Budget Created!`)
+            const {data,error} =await supabase
+                .from('Budgets-table')
+                .insert([{name:values.newBudget,amount:values.newBudgetAmount,color:'34% 65% 50%'}])
 
         }
         catch(e){
@@ -79,7 +124,48 @@ export async function dashboardAction({request}){
 }
 
 function Dashboard() {
-    const {userName,budgets,expenses}=useLoaderData()
+    const userName=fetchData("userName");
+    const [fetchError,setFetchError]=useState(null);
+    const [budgets,setbudget]=useState(null);
+    const [expenses,setexpense]=useState(null);
+
+    useEffect(()=>{
+        const fetchBudgets=async()=>{
+            const {data,error} = await supabase
+            .from('Budgets-table')
+            .select()
+
+            if(error){
+                setFetchError('Could not fetch the budget')
+                setbudget(null)
+                console.log(error)
+            }
+            if(data){
+                setbudget(data)
+                setFetchError(null)
+            }
+        }
+
+        const fetchExpenses=async()=>{
+            const {data,error} = await supabase
+            .from('Expense-table')
+            .select()
+
+            if(error){
+                setFetchError('Could not fetch the expense')
+                setexpense(null)
+                console.log(error)
+            }
+            if(data){
+                setexpense(data)
+                setFetchError(null)
+            }
+        }
+
+        fetchBudgets();
+        fetchExpenses();
+
+    },[])
   return (
     <div>
         {userName ? (
